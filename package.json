@@ -1,0 +1,25 @@
+{
+  "name": "webapp-fork",
+  "version": "1.0.0",
+  "description": "Repository for all the assignments of the course: CSYE 6225 - Network Structures &amp; Cloud Computing",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.1",
+    "express": "^5.0.0-beta.1",
+    "express-validator": "^7.0.1",
+    "mysql2": "^3.9.1",
+    "sequelize": "^6.36.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}
