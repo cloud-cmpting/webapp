@@ -5,7 +5,7 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\"",
+    "test": "jest",
     "dev": "npx nodemon app.js"
   },
   "keywords": [],
@@ -20,6 +20,11 @@
     "sequelize": "^6.36.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.3"
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.3",
+    "supertest": "^6.3.4"
   }
 }
