@@ -197,6 +197,8 @@ app.options("/healthz", [checkExact()], validateRequest, async (req, res) => {
 });
 
 // Starting the server
-app.listen(8080, () => {
+const server = app.listen(8080, () => {
   console.log("Server running on port 8080");
 });
+
+export default server;
