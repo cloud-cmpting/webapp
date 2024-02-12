@@ -1,0 +1,38 @@
+name: Tests CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Tests
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [21.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Setup MySQL
+      run: |
+        sudo /etc/init.d/mysql start
+        sudo mysql -h ${{ secrets.MYSQL_HOST }} -u${{ secrets.MYSQL_USER }} -p${{ secrets.MYSQL_PASSWORD }} -e "CREATE DATABASE webapp;"
+
+    - name: Install Dependencies
+      run: npm ci
+
+    - name: Run Tests
+      run: npm test
+
+    - name: Destroy MySQL
+      run: sudo mysql -e "DROP DATABASE webapp;"
