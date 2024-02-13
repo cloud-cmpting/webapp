@@ -13,7 +13,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:latest
         env:
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
@@ -32,9 +32,7 @@ jobs:
         cache: 'npm'
 
     - name: Setup MySQL
-      run: |
-        sudo /etc/init.d/mysql start
-        sudo mysql -e "CREATE DATABASE webapp;"
+      run: mysql -h ${{secrets.MYSQL_HOST}} -u ${{secrets.MYSQL_USER}} -p${{secrets.MYSQL_PASSWORD}} -e "CREATE DATABASE webapp;"
 
     - name: Install Dependencies
       run: npm ci
