@@ -11,13 +11,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    # services:
-    #   mysql:
-    #     image: mysql:latest
-    #     env:
-    #       MYSQL_USER: ${{ secrets.MYSQL_USER }}
-    #       MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-    #       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+    env:
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
 
     strategy:
       matrix:
@@ -34,6 +32,7 @@ jobs:
     - name: Setup MySQL
       run: |
         sudo /etc/init.d/mysql start
+        mysql -h ${{secrets.MYSQL_HOST}} --port 3306 -u${{secrets.MYSQL_USER}} -p${{secrets.MYSQL_PASSWORD}} -e "CREATE DATABASE ${{ secrets.MYSQL_DATABASE }};"
         mysql -h ${{secrets.MYSQL_HOST}} --port 3306 -u${{secrets.MYSQL_USER}} -p${{secrets.MYSQL_PASSWORD}} -e "SHOW DATABASES;"
 
     - name: Install Dependencies
