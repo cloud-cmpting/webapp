@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "test": "jest",
-    "tests": "",
+    "tests": "echo \"Dummy test\"",
     "dev": "npx nodemon app.js"
   },
   "keywords": [],
