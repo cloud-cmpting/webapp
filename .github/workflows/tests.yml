@@ -11,13 +11,13 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:latest
-        env:
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+    # services:
+    #   mysql:
+    #     image: mysql:latest
+    #     env:
+    #       MYSQL_USER: ${{ secrets.MYSQL_USER }}
+    #       MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+    #       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
 
     strategy:
       matrix:
@@ -34,8 +34,7 @@ jobs:
     - name: Setup MySQL
       run: |
         sudo /etc/init.d/mysql start
-        mysql -e "CREATE DATABASE webapp;"
-        mysql -e "SHOW DATABASES;"
+        mysql -h ${{secrets.MYSQL_HOST}} --port 3306 -u${{secrets.MYSQL_USER}} -p${{secrets.MYSQL_PASSWORD}} -e "SHOW DATABASES;"
 
     - name: Install Dependencies
       run: npm ci
