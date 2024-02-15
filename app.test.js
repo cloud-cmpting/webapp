@@ -1,5 +1,7 @@
 import request from "supertest";
 import app from "./app.js";
+import User from "./models/User.js";
+import bcrypt from "bcrypt";
 
 describe("Create an account and using GET, validate account exists", () => {
     test("should respond with a 200 status code", async () => {
@@ -27,6 +29,14 @@ describe("Update the account and using GET, validate the account was updated", (
         expect(response.status).toBe(200);
         expect(response.body.first_name).toBe("Akshay");
         expect(response.body.last_name).toBe("Dedhia");
+
+        const result = await User.findOne({
+            where: {
+                email: "jaygala25@gmail.com"
+            }
+        })
+        const passwordMatch = await bcrypt.compare("123456",result.dataValues.password);
+        expect(passwordMatch).toBe(true);
     })
 })
 
