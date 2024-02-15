@@ -87,7 +87,7 @@ const authMiddleware = (req, res, next) => {
 
 // Create User API
 app.post(
-  "/create-user",
+  "/v1/user",
   [
     body("email").notEmpty().withMessage("email is required").bail().isEmail(),
     body("password").notEmpty().withMessage("password is required"),
@@ -95,7 +95,6 @@ app.post(
     body("lastName").notEmpty().withMessage("lastName is required"),
   ],
   validateRequest,
-  dbConnCheck,
   async (req, res) => {
     const hash = await bcrypt.hash(req.body.password.toString(), 13);
 
@@ -117,10 +116,9 @@ app.post(
 
 // Get User API
 app.get(
-  "/get-user",
+  "/v1/user/self",
   [checkExact()],
   validateRequest,
-  dbConnCheck,
   authMiddleware,
   async (req, res) => {
     delete req.user.password;
@@ -130,7 +128,7 @@ app.get(
 
 // Update User API
 app.put(
-  "/update-user",
+  "/v1/user/self",
   [
     body("password").notEmpty().withMessage("password is required"),
     body("firstName").notEmpty().withMessage("firstName is required"),
@@ -138,7 +136,6 @@ app.put(
     checkExact(),
   ],
   validateRequest,
-  dbConnCheck,
   authMiddleware,
   async (req, res) => {
     const toUpdate = {};
