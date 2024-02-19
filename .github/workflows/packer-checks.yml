@@ -21,5 +21,8 @@ jobs:
     - name: Packer Format Check
       run: packer fmt -check packer/packer.pkr.hcl
 
+    - name: Go into packer directory
+      run: cd packer
+
     - name: Packer Validate
-      run: packer validate -var 'credentials_file=${{ secrets.GCP_SERVICE_ACC_KEY }}' packer/packer.pkr.hcl
+      run: packer validate -var 'credentials_file=${{ secrets.GCP_SERVICE_ACC_KEY }}' packer.pkr.hcl
