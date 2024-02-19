@@ -27,4 +27,4 @@ jobs:
       run: packer fmt -check packer/packer.pkr.hcl
 
     - name: Packer Validate
-      run: packer validate -var 'credentials_file=GCP_SERVICE_ACC_KEY.json' packer/packer.pkr.hcl
+      run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' -var 'credentials_file=GCP_SERVICE_ACC_KEY.json' packer/packer.pkr.hcl
