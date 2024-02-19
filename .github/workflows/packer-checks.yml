@@ -21,10 +21,10 @@ jobs:
     #     packer_version: ${{ secrets.PACKER_VERSION }}
 
     - name: Packer Init
-      run: packer init ../packer/packer.pkr.hcl
+      run: packer init ../../packer/packer.pkr.hcl
 
     - name: Packer Format Check
-      run: packer fmt -check ../packer/packer.pkr.hcl
+      run: packer fmt -check ../../packer/packer.pkr.hcl
 
     - name: Packer Validate
-      run: packer validate ../packer/packer.pkr.hcl
+      run: packer validate ../../packer/packer.pkr.hcl
