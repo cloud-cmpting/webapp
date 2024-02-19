@@ -23,8 +23,8 @@ build {
 
   provisioner "shell" {
     scripts = [
-      "scripts/mysql-install.sh",
-      "scripts/node-install.sh"
+      "packer/scripts/mysql-install.sh",
+      "packer/scripts/node-install.sh"
     ]
   }
 }
