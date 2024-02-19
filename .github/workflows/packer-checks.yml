@@ -5,6 +5,10 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+env:
+  TF_LOG: INFO
+  TF_INPUT: false
+  
 jobs:
   build:
     name: Packer Checks CI
@@ -14,11 +18,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-
-    # - name: Setup Packer
-    #   uses: hashicorp/setup-packer@v1
-    #   with:
-    #     packer_version: ${{ secrets.PACKER_VERSION }}
 
     - name: Packer Init
       run: packer init packer/packer.pkr.hcl
