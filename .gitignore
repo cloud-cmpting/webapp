@@ -129,4 +129,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-packer/credentials.json
+packer/GCP_SERVICE_ACC_KEY.json
