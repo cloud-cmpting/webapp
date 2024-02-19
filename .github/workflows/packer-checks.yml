@@ -4,10 +4,6 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
-
-env:
-  TF_LOG: INFO
-  TF_INPUT: false
   
 jobs:
   build:
@@ -26,4 +22,4 @@ jobs:
       run: packer fmt -check packer/packer.pkr.hcl
 
     - name: Packer Validate
-      run: packer validate packer/packer.pkr.hcl
+      run: packer validate -var 'credentials_file=${{ secrets.GCP_SERVICE_ACC_KEY }}' packer/packer.pkr.hcl

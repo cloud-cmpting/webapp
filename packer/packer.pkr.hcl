@@ -7,13 +7,15 @@ packer {
   }
 }
 
+variable "credentials_file" {}
+
 source "googlecompute" "packer-image" {
   project_id       = "cloud--dev"
   source_image     = "centos-stream-8-v20240110"
   zone             = "us-east1-b"
   ssh_username     = "packer-image"
   image_name       = "packer-centos-8-2"
-  credentials_file = "credentials.json"
+  credentials_file = var.credentials_file
 }
 
 build {
