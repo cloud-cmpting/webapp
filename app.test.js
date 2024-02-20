@@ -13,7 +13,7 @@ describe("Create an account and using GET, validate account exists", () => {
         });
 
         const response = await request(app).get("/v1/user/self").auth("jaygala25@gmail.com", "123456")
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(201);
     })
 });
 
