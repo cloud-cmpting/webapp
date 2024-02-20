@@ -1,5 +1,5 @@
 # webapp
-Repository for all the assignments of the course: CSYE 6225 - Network Structures &amp; Cloud Computing
+Repository for all the assignments of the course: CSYE 6225-Network Structures &amp; Cloud Computing
 
 ## Steps to run the application locally
 - Run `brew services restart mysql`
