@@ -29,4 +29,9 @@ build {
       "packer/scripts/node-install.sh"
     ]
   }
+
+  provisioner "file" {
+    source      = "webapp-artifact.zip"
+    destination = "/opt/app/webapp-artifact.zip"
+  }
 }
