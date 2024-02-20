@@ -17,6 +17,7 @@ source "googlecompute" "packer-image" {
   ssh_username     = "packer-image"
   image_name       = "packer-image-centos-8"
   credentials_file = var.credentials_file
+  network          = "default"
 }
 
 build {
