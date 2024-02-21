@@ -29,7 +29,9 @@ build {
       "sudo chown -R packer-image:packer-image /opt/app/",
       "sudo chmod -R 755 /opt/app/",
     ]
+  }
 
+  provisioner "shell" {
     scripts = [
       //"packer/scripts/mysql-install.sh",
       //"packer/scripts/node-install.sh",
