@@ -49,7 +49,7 @@ jobs:
       run: npm run build
 
     - name: Make .env file
-      run: echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" > .env && echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env && echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env && echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+      run: echo "MYSQL_USER='${{ secrets.MYSQL_USER }}'" > .env && echo "MYSQL_PASSWORD='${{ secrets.MYSQL_PASSWORD }}'" >> .env && echo "MYSQL_HOST='${{ secrets.MYSQL_HOST }}'" >> .env && echo "MYSQL_DATABASE='${{ secrets.MYSQL_DATABASE }}'" >> .env
 
     - name: Setup GCP creds
       env:
