@@ -28,7 +28,7 @@ build {
       "sudo groupadd csye6225",
       "sudo useradd -g csye6225 -s /usr/sbin/nologin csye6225",
       "sudo mkdir -p /opt/app/",
-      "sudo chown -R csye6225:csye6225 /opt/app/",
+      //"sudo chown -R csye6225:csye6225 /opt/app/",
       "sudo chmod -R 755 /opt/app/"
     ]
 
