@@ -30,11 +30,11 @@ build {
       "sudo chmod -R 755 /opt/app/",
     ]
 
-    // scripts = [
-    //   "packer/scripts/mysql-install.sh",
-    //   "packer/scripts/node-install.sh",
-    //   "packer/scripts/unzip-install.sh",
-    // ]
+    scripts = [
+      //"packer/scripts/mysql-install.sh",
+      //"packer/scripts/node-install.sh",
+      "packer/scripts/unzip-install.sh",
+    ]
   }
 
   provisioner "file" {
