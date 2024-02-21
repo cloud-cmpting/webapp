@@ -5,6 +5,10 @@ sudo sh -c  'cat << EOF > /etc/systemd/system/webapp.service
 After=network.target
 
 [Service]
+Environment=MYSQL_HOST='$MYSQL_HOST'
+Environment=MYSQL_USER='$MYSQL_USER'
+Environment=MYSQL_PASSWORD='$MYSQL_PASSWORD'
+Environment=MYSQL_DATABASE='$MYSQL_DATABASE'
 Type=simple
 User=csye6225
 Group=csye6225
