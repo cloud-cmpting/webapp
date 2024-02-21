@@ -60,4 +60,4 @@ jobs:
       run: packer init packer/packer.pkr.hcl
 
     - name: Packer Build
-      run: packer build -force -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' -var 'credentials_file=GCP_SERVICE_ACC_KEY.json' packer/packer.pkr.hcl
+      run: packer build -force -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' -var 'credentials_file=GCP_SERVICE_ACC_KEY.json' -var "MYSQL_DATABASE=${MYSQL_DATABASE}" -var "MYSQL_PASSWORD=${MYSQL_PASSWORD}" packer/packer.pkr.hcl
