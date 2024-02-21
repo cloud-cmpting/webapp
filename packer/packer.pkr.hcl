@@ -9,6 +9,8 @@ packer {
 
 variable "credentials_file" {}
 variable "project_id" {}
+variable "MYSQL_DATABASE" {}
+variable "MYSQL_PASSWORD" {}
 
 source "googlecompute" "packer-image" {
   project_id       = var.project_id
