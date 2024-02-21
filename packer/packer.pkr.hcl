@@ -28,8 +28,8 @@ build {
   provisioner "shell" {
     inline = [
       "sudo mkdir -p /opt/app/",
-      "sudo chown -R packer-image:packer-image /opt/app/",
-      "sudo chmod -R 755 /opt/app/",
+      "sudo chown -R packer-image:packer-image /opt/app",
+      "sudo chmod -R 755 /opt/app",
     ]
   }
 
@@ -62,8 +62,8 @@ build {
     inline = [
       "sudo groupadd csye6225",
       "sudo useradd -g csye6225 -s /usr/sbin/nologin csye6225",
-      "sudo chown -R csye6225:csye6225 /opt/app/",
-      "sudo unzip /opt/app/webapp-artifact.zip -d /opt/app/",
+      "sudo chown -R csye6225:csye6225 /opt/app",
+      "sudo -u csye6225 unzip /opt/app/webapp-artifact.zip -d /opt/app/",
       "cd /opt/app/",
       "sudo -u csye6225 npm install"
     ]
