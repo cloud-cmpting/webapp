@@ -33,8 +33,8 @@ build {
 
   provisioner "shell" {
     scripts = [
-      //"packer/scripts/mysql-install.sh",
-      //"packer/scripts/node-install.sh",
+      "packer/scripts/mysql-install.sh",
+      "packer/scripts/node-install.sh",
       "packer/scripts/unzip-install.sh",
     ]
   }
@@ -49,7 +49,7 @@ build {
       "sudo groupadd csye6225",
       "sudo useradd -g csye6225 -s /usr/sbin/nologin csye6225",
       "sudo chown -R csye6225:csye6225 /opt/app/",
-      "sudo unzip /opt/app/webapp-artifact.zip -d /opt/app/"
+      "sudo unzip /opt/app/webapp-artifact.zip"
     ]
   }
 }
