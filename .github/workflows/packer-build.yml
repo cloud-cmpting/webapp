@@ -48,6 +48,9 @@ jobs:
     - name: Build application artifact (.zip)
       run: npm run build
 
+    - name: Make .env file
+      run: echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" > .env && echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env && echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env && echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+
     - name: Setup GCP creds
       env:
         GCP_SERVICE_ACC_KEY: ${{ secrets.GCP_SERVICE_ACC_KEY }}
