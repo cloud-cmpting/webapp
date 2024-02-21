@@ -39,7 +39,6 @@ build {
   provisioner "file" {
     source      = "webapp-artifact.zip"
     destination = "/opt/app/webapp-artifact.zip"
-    ssh_username = "packer-image"
   }
 
   // provisioner "shell" {
