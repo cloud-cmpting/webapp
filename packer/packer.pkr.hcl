@@ -25,12 +25,9 @@ build {
 
   provisioner "shell" {
     inline = [
-      "sudo groupadd csye6225",
-      "sudo useradd -g csye6225 -s /usr/sbin/nologin csye6225",
       "sudo mkdir -p /opt/app/",
       "sudo chown -R packer-image:packer-image /opt/app/",
       "sudo chmod -R 755 /opt/app/",
-      "ls -l /opt/app/"
     ]
 
     // scripts = [
@@ -45,10 +42,12 @@ build {
     destination = "/opt/app/webapp-artifact.zip"
   }
 
-  // provisioner "shell" {
-  //   inline = [
-  //     "sudo unzip /opt/app/webapp-artifact.zip -d /opt/app/",
-  //     "sudo chown -R csye6225:csye6225 /opt/app/webapp-artifact"
-  //   ]
-  // }
+  provisioner "shell" {
+    inline = [
+      "sudo groupadd csye6225",
+      "sudo useradd -g csye6225 -s /usr/sbin/nologin csye6225",
+      "sudo chown -R csye6225:csye6225 /opt/app/",
+      "sudo unzip /opt/app/webapp-artifact.zip -d /opt/app/"
+    ]
+  }
 }
