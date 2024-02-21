@@ -55,11 +55,6 @@ build {
     destination = "/opt/app/webapp-artifact.zip"
   }
 
-  provisioner "file" {
-    source      = ".env"
-    destination = "/opt/app/.env"
-  }
-
   provisioner "shell" {
     inline = [
       "sudo groupadd csye6225",
