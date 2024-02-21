@@ -15,6 +15,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - name: Build application artifact (.zip)
+      run: npm run build
+
     - name: Setup GCP creds
       env:
         GCP_SERVICE_ACC_KEY: ${{ secrets.GCP_SERVICE_ACC_KEY }}
