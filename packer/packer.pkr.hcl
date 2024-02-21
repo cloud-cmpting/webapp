@@ -68,4 +68,8 @@ build {
       "sudo -u csye6225 npm install"
     ]
   }
+
+  provisioner "shell" {
+    script = "packer/scripts/create-service-file.sh"
+  }
 }
