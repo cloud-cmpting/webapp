@@ -32,8 +32,15 @@ build {
   }
 
   provisioner "shell" {
+    script = "packer/scripts/mysql-install.sh"
+    environment_vars = [
+      "MYSQL_DATABASE=${MYSQL_DATABASE}",
+      "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
+    ]
+  }
+
+  provisioner "shell" {
     scripts = [
-      "packer/scripts/mysql-install.sh",
       "packer/scripts/node-install.sh",
       "packer/scripts/unzip-install.sh",
     ]
@@ -44,12 +51,17 @@ build {
     destination = "/opt/app/webapp-artifact.zip"
   }
 
+  provisioner "file" {
+    source      = ".env"
+    destination = "/opt/app/.env"
+  }
+
   provisioner "shell" {
     inline = [
       "sudo groupadd csye6225",
       "sudo useradd -g csye6225 -s /usr/sbin/nologin csye6225",
       "sudo chown -R csye6225:csye6225 /opt/app/",
-      "sudo unzip /opt/app/webapp-artifact.zip"
+      "sudo unzip /opt/app/webapp-artifact.zip -d /opt/app/"
     ]
   }
 }
