@@ -9,17 +9,13 @@ packer {
 
 variable "credentials_file" {}
 variable "project_id" {}
-variable "MYSQL_DATABASE" {}
-variable "MYSQL_PASSWORD" {}
-variable "MYSQL_USER" {}
-variable "MYSQL_HOST" {}
 
 source "googlecompute" "packer-image" {
   project_id       = var.project_id
   source_image     = "centos-stream-8-v20240110"
   zone             = "us-east1-b"
   ssh_username     = "packer-image"
-  image_name       = "packer-image-centos-8"
+  image_name       = "packer-image-cloud-db-instance"
   credentials_file = var.credentials_file
   network          = "default"
 }
@@ -32,14 +28,6 @@ build {
       "sudo mkdir -p /opt/app/",
       "sudo chown -R packer-image:packer-image /opt/app",
       "sudo chmod -R 755 /opt/app",
-    ]
-  }
-
-  provisioner "shell" {
-    script = "packer/scripts/mysql-install.sh"
-    environment_vars = [
-      "MYSQL_DATABASE=${var.MYSQL_DATABASE}",
-      "MYSQL_PASSWORD=${var.MYSQL_PASSWORD}"
     ]
   }
 
@@ -68,11 +56,5 @@ build {
 
   provisioner "shell" {
     script = "packer/scripts/create-service-file.sh"
-    environment_vars = [
-      "MYSQL_DATABASE=${var.MYSQL_DATABASE}",
-      "MYSQL_PASSWORD=${var.MYSQL_PASSWORD}",
-      "MYSQL_USER=${var.MYSQL_USER}",
-      "MYSQL_HOST=${var.MYSQL_HOST}"
-    ]
   }
 }
