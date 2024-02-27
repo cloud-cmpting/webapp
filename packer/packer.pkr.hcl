@@ -36,7 +36,7 @@ build {
   }
 
   provisioner "shell" {
-    script = "packer/scripts/mysql-install.sh"
+    script            = "packer/scripts/mysql-install.sh"
     environment_vars = [
       "MYSQL_DATABASE=${var.MYSQL_DATABASE}",
       "MYSQL_PASSWORD=${var.MYSQL_PASSWORD}"
