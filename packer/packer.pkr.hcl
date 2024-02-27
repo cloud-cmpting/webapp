@@ -12,7 +12,6 @@ variable "project_id" {}
 variable "MYSQL_DATABASE" {}
 variable "MYSQL_PASSWORD" {}
 variable "MYSQL_USER" {}
-variable "MYSQL_HOST" {}
 
 source "googlecompute" "packer-image" {
   project_id       = var.project_id
@@ -36,7 +35,7 @@ build {
   }
 
   provisioner "shell" {
-    script            = "packer/scripts/mysql-install.sh"
+    script = "packer/scripts/mysql-install.sh"
     environment_vars = [
       "MYSQL_DATABASE=${var.MYSQL_DATABASE}",
       "MYSQL_PASSWORD=${var.MYSQL_PASSWORD}"
