@@ -12,6 +12,7 @@ variable "project_id" {}
 variable "MYSQL_DATABASE" {}
 variable "MYSQL_PASSWORD" {}
 variable "MYSQL_USER" {}
+variable "MYSQL_HOST" {}
 
 source "googlecompute" "packer-image" {
   project_id       = var.project_id
