@@ -36,4 +36,4 @@ jobs:
       run: packer fmt -check packer/packer.pkr.hcl
 
     - name: Packer Validate
-      run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' -var 'credentials_file=GCP_SERVICE_ACC_KEY.json' -var "MYSQL_DATABASE=${MYSQL_DATABASE}" -var "MYSQL_PASSWORD=${MYSQL_PASSWORD}" -var "MYSQL_USER=${MYSQL_USER}" -var "MYSQL_HOST=${MYSQL_HOST}" packer/packer.pkr.hcl
+      run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' -var 'credentials_file=GCP_SERVICE_ACC_KEY.json' packer/packer.pkr.hcl
