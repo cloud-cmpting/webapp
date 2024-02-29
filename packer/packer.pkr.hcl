@@ -15,7 +15,7 @@ source "googlecompute" "packer-image" {
   source_image     = "centos-stream-8-v20240110"
   zone             = "us-east1-b"
   ssh_username     = "packer-image"
-  image_name       = "packer-img-with-cloud-SQL"
+  image_name       = "packer-img-with-cloud-db"
   credentials_file = var.credentials_file
   network          = "default"
 }
