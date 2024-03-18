@@ -60,6 +60,9 @@ build {
   }
 
   provisioner "shell" {
-    script = "packer/scripts/create-service-file.sh"
+    scripts = [
+      "packer/scripts/configure-ops-agent.sh",
+      "packer/scripts/create-service-file.sh"
+    ]
   }
 }
