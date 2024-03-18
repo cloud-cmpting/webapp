@@ -10,30 +10,38 @@ import winston from "winston";
 const app = express();
 app.use(express.json());
 
-app.use(expressWinston.logger({
-  transports: [
-    new transports.File({ filename: 'requests.log' })
-  ],
+app.use(
+  expressWinston.logger({
+    transports: [
+      new transports.File({ filename: "/var/log/webapp/events.log" }),
+    ],
+    format: format.combine(
+      format.json(),
+      format.timestamp(),
+      format.prettyPrint()
+    ),
+    requestWhitelist: [
+      "url",
+      "headers",
+      "method",
+      "httpVersion",
+      "originalUrl",
+      "query",
+      "body",
+    ],
+    bodyBlacklist: ["password"],
+    responseWhitelist: ["statusCode", "statusMessage", "body"],
+    statusLevels: true,
+  })
+);
+
+const logger = winston.createLogger({
+  transports: [new transports.File({ filename: "/var/log/webapp/events.log" })],
   format: format.combine(
     format.json(),
     format.timestamp(),
     format.prettyPrint()
   ),
-  requestWhitelist: ['url', 'headers', 'method', 'httpVersion', 'originalUrl', 'query', 'body'],
-  bodyBlacklist: ['password'],
-  responseWhitelist: ['statusCode', 'statusMessage', 'body'],
-  statusLevels: true
-}))
-
-const logger = winston.createLogger({
-  transports: [
-    new transports.File({ filename: 'server.log' })
-  ],
-  format: format.combine(
-    format.json(),
-    format.timestamp(),
-    format.prettyPrint()
-  )
 });
 
 // Database connection
@@ -224,7 +232,7 @@ app.options("/healthz", [checkExact()], validateRequest, async (req, res) => {
 app.use(
   expressWinston.errorLogger({
     transports: [
-      new transports.File({ filename: "runtimeExceptions.log" }),
+      new transports.File({ filename: "/var/log/webapp/events.log" }),
     ],
     format: format.combine(
       format.json(),

@@ -53,7 +53,9 @@ build {
       "sudo chown -R csye6225:csye6225 /opt/app",
       "sudo -u csye6225 unzip /opt/app/webapp-artifact.zip -d /opt/app/",
       "cd /opt/app/",
-      "sudo -u csye6225 npm install"
+      "sudo -u csye6225 npm install",
+      "sudo mkdir /var/log/webapp",
+      "sudo chown -R csye6225:csye6225 /var/log/webapp"
     ]
   }
 
