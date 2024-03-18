@@ -18,6 +18,8 @@ source "googlecompute" "packer-image" {
   image_name       = "packer-img-with-cloud-db"
   credentials_file = var.credentials_file
   network          = "default"
+  machine_type     = "c3d-standard-4"
+  disk_type        = "pd-ssd"
 }
 
 build {
@@ -35,6 +37,7 @@ build {
     scripts = [
       "packer/scripts/node-install.sh",
       "packer/scripts/unzip-install.sh",
+      "packer/scripts/ops-agent-install.sh"
     ]
   }
 

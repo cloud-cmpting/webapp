@@ -3,25 +3,53 @@ import sequelize from "./config/database.js";
 import User from "./models/User.js";
 import bcrypt from "bcrypt";
 import { body, checkExact, validationResult } from "express-validator";
+import expressWinston from "express-winston";
+import { format, transports } from "winston";
+import winston from "winston";
+
+const app = express();
+app.use(express.json());
+
+app.use(expressWinston.logger({
+  transports: [
+    new transports.File({ filename: 'requests.log' })
+  ],
+  format: format.combine(
+    format.json(),
+    format.timestamp(),
+    format.prettyPrint()
+  ),
+  requestWhitelist: ['url', 'headers', 'method', 'httpVersion', 'originalUrl', 'query', 'body'],
+  bodyBlacklist: ['password'],
+  responseWhitelist: ['statusCode', 'statusMessage', 'body'],
+  statusLevels: true
+}))
+
+const logger = winston.createLogger({
+  transports: [
+    new transports.File({ filename: 'server.log' })
+  ],
+  format: format.combine(
+    format.json(),
+    format.timestamp(),
+    format.prettyPrint()
+  )
+});
 
 // Database connection
 const initApp = async () => {
-  console.log("Testing the database connection...");
+  logger.info("Testing the database connection...");
   try {
     await sequelize.authenticate();
-    console.log("Connection has been established successfully.");
+    logger.info("Connection has been established successfully.");
 
     await User.sync({ alter: true });
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    logger.error("Unable to connect to the database:", error);
   }
 };
 
 initApp();
-
-// APIs
-const app = express();
-app.use(express.json());
 
 // Middlewares
 const dbConnCheck = async (req, res, next) => {
@@ -193,9 +221,22 @@ app.options("/healthz", [checkExact()], validateRequest, async (req, res) => {
   res.status(405).send();
 });
 
+app.use(
+  expressWinston.errorLogger({
+    transports: [
+      new transports.File({ filename: "runtimeExceptions.log" }),
+    ],
+    format: format.combine(
+      format.json(),
+      format.timestamp(),
+      format.prettyPrint()
+    ),
+  })
+);
+
 // Starting the server
 const server = app.listen(8080, () => {
-  console.log("Server running on port 8080");
+  logger.info("Server running on port 8080");
 });
 
 export default server;
