@@ -16,8 +16,8 @@ app.use(
       new transports.File({ filename: "/var/log/webapp/events.log" }),
     ],
     format: format.combine(
-      format.json(),
-      format.timestamp()
+      format.timestamp(),
+      format.json()
     ),
     requestWhitelist: [
       "url",
@@ -37,8 +37,8 @@ app.use(
 const logger = winston.createLogger({
   transports: [new transports.File({ filename: "/var/log/webapp/events.log" })],
   format: format.combine(
-    format.json(),
-    format.timestamp()
+    format.timestamp(),
+    format.json()
   ),
 });
 
@@ -233,8 +233,8 @@ app.use(
       new transports.File({ filename: "/var/log/webapp/events.log" }),
     ],
     format: format.combine(
-      format.json(),
-      format.timestamp()
+      format.timestamp(),
+      format.json()
     ),
   })
 );
