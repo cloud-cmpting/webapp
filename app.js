@@ -7,13 +7,20 @@ import expressWinston from "express-winston";
 import { format, transports } from "winston";
 import winston from "winston";
 
+let logFilePath = "";
+if (process.env.NODE_ENV == "test") {
+  logFilePath = "./events.log"
+} else {
+  logFilePath = "/var/log/webapp/events.log"
+}
+
 const app = express();
 app.use(express.json());
 
 app.use(
   expressWinston.logger({
     transports: [
-      new transports.File({ filename: "/var/log/webapp/events.log" }),
+      new transports.File({ filename: logFilePath }),
     ],
     format: format.combine(
       format.timestamp(),
@@ -35,7 +42,7 @@ app.use(
 );
 
 const logger = winston.createLogger({
-  transports: [new transports.File({ filename: "/var/log/webapp/events.log" })],
+  transports: [new transports.File({ filename: logFilePath })],
   format: format.combine(
     format.timestamp(),
     format.json()
@@ -230,7 +237,7 @@ app.options("/healthz", [checkExact()], validateRequest, async (req, res) => {
 app.use(
   expressWinston.errorLogger({
     transports: [
-      new transports.File({ filename: "/var/log/webapp/events.log" }),
+      new transports.File({ filename: logFilePath }),
     ],
     format: format.combine(
       format.timestamp(),
