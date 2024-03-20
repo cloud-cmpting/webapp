@@ -11,13 +11,18 @@ logging:
   processors:
     my-app-processor:
       type: parse_json
-      time_key: time
-      time_format: "%Y-%m-%dT%H:%M:%S.%L%Z"
+      time_key: timestamp
+      time_format: "%Y-%m-%dT%H:%M:%S.%LZ"
+    add-severity:
+      type: modify_fields
+      fields:
+        severity:
+          copy_from: jsonPayload.level
   service:
     pipelines:
       default_pipeline:
         receivers: [my-app-receiver]
-        processors: [my-app-processor]
+        processors: [my-app-processor, add-severity]
 EOF
 
 sudo systemctl restart google-cloud-ops-agent
