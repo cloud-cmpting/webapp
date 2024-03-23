@@ -7,6 +7,7 @@ import { body, checkExact, validationResult } from "express-validator";
 import expressWinston from "express-winston";
 import { format, transports } from "winston";
 import winston from "winston";
+import crypto from "crypto";
 
 let logFilePath = "";
 if (process.env.NODE_ENV == "test") {
@@ -138,21 +139,26 @@ app.post(
   ],
   validateRequest,
   async (req, res) => {
-    const hash = await bcrypt.hash(req.body.password.toString(), 13);
+    try {
+      const hash = await bcrypt.hash(req.body.password.toString(), 13);
 
-    User.create({
-      email: req.body.email,
-      password: hash,
-      first_name: req.body.firstName,
-      last_name: req.body.lastName,
-    })
-      .then((result) => {
-        delete result.dataValues.password;
-        res.status(201).send(result);
+      const newUser = await User.create({
+        email: req.body.email,
+        password: hash,
+        first_name: req.body.firstName,
+        last_name: req.body.lastName,
       })
-      .catch((err) => {
-        res.status(400).send(err);
+
+      const emailToken = await email_token.create({
+        user_id: newUser.dataValues.id,
+        token: crypto.randomBytes(64).toString("hex"),
       });
+
+      delete newUser.dataValues.password;
+      res.status(201).send(newUser);
+    } catch (err) {
+      res.status(400).send(err);
+    }
   }
 );
 
