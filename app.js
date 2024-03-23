@@ -1,13 +1,12 @@
 import express from "express";
 import sequelize from "./config/database.js";
 import User from "./models/User.js";
-import email_token from "./models/email_token.js";
 import bcrypt from "bcrypt";
 import { body, checkExact, validationResult } from "express-validator";
 import expressWinston from "express-winston";
 import { format, transports } from "winston";
 import winston from "winston";
-import crypto from "crypto";
+import jwt from "jsonwebtoken";
 
 let logFilePath = "";
 if (process.env.NODE_ENV == "test") {
@@ -149,10 +148,17 @@ app.post(
         last_name: req.body.lastName,
       })
 
-      const emailToken = await email_token.create({
-        user_id: newUser.dataValues.id,
-        token: crypto.randomBytes(64).toString("hex"),
-      });
+      const user = {
+        email: newUser.dataValues.email
+      }
+
+      const token = jwt.sign(
+        user, 
+        process.env.JWT_SECRET_KEY, 
+        {
+          expiresIn: '2m'
+        }
+      )
 
       delete newUser.dataValues.password;
       res.status(201).send(newUser);
@@ -204,6 +210,23 @@ app.put(
       });
   }
 );
+
+app.get("/verify/:token", async (req, res) => {
+  const token = req.params.token;
+  
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
+    if (err) {
+      return res.status(401).json({ message: 'Token invalid or expired' });
+    }
+
+    User.update(
+      { is_active: true },
+      { where: { email: user.email } }
+    )
+
+    res.status(200).json({ message: 'User verified successfully' });
+  })
+})
 
 // Health APIs
 app.get(
