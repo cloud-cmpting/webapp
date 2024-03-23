@@ -1,6 +1,7 @@
 import express from "express";
 import sequelize from "./config/database.js";
 import User from "./models/User.js";
+import email_token from "./models/email_token.js";
 import bcrypt from "bcrypt";
 import { body, checkExact, validationResult } from "express-validator";
 import expressWinston from "express-winston";
@@ -56,7 +57,7 @@ const initApp = async () => {
     await sequelize.authenticate();
     logger.info("Connection has been established successfully.");
 
-    await User.sync({ alter: true });
+    await sequelize.sync({ alter: true });
   } catch (error) {
     logger.error("Unable to connect to the database:", error);
   }
