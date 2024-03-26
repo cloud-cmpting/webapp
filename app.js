@@ -9,6 +9,8 @@ import { format, transports } from "winston";
 import winston from "winston";
 import jwt from "jsonwebtoken";
 import { PubSub } from "@google-cloud/pubsub";
+import crypto from "crypto";
+
 
 let logFilePath = "";
 if (process.env.NODE_ENV == "test") {
@@ -155,9 +157,11 @@ app.post(
       const pubSubClient = new PubSub();
 
       const user = {
+        user_id: newUser.dataValues.id,
         email: newUser.dataValues.email,
         first_name: newUser.dataValues.first_name,
         last_name: newUser.dataValues.last_name,
+        token: crypto.randomBytes(64).toString("hex")
       };
 
       const dataBuffer = Buffer.from(JSON.stringify(user));

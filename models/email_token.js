@@ -11,6 +11,8 @@ const email_token = sequelize.define(
     },
     user_id: {
       type: DataTypes.UUID,
+      allowNull: false,
+      unique: true,
       references: {
         model: "user_account_info",
         key: "id",
@@ -20,6 +22,8 @@ const email_token = sequelize.define(
     },
     token: {
       type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
   },
   {
