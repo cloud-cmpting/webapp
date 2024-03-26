@@ -1,12 +1,14 @@
 import express from "express";
 import sequelize from "./config/database.js";
 import User from "./models/User.js";
+import email_token from "./models/email_token.js";
 import bcrypt from "bcrypt";
 import { body, checkExact, validationResult } from "express-validator";
 import expressWinston from "express-winston";
 import { format, transports } from "winston";
 import winston from "winston";
 import jwt from "jsonwebtoken";
+import { PubSub } from "@google-cloud/pubsub";
 
 let logFilePath = "";
 if (process.env.NODE_ENV == "test") {
@@ -139,6 +141,7 @@ app.post(
   validateRequest,
   async (req, res) => {
     try {
+      // User creation
       const hash = await bcrypt.hash(req.body.password.toString(), 13);
 
       const newUser = await User.create({
@@ -146,19 +149,19 @@ app.post(
         password: hash,
         first_name: req.body.firstName,
         last_name: req.body.lastName,
-      })
+      });
+
+      // Pub Sub process
+      const pubSubClient = new PubSub();
 
       const user = {
-        email: newUser.dataValues.email
-      }
+        email: newUser.dataValues.email,
+        first_name: newUser.dataValues.first_name,
+        last_name: newUser.dataValues.last_name,
+      };
 
-      const token = jwt.sign(
-        user, 
-        process.env.JWT_SECRET_KEY, 
-        {
-          expiresIn: '2m'
-        }
-      )
+      const dataBuffer = Buffer.from(JSON.stringify(user));
+      const messageId = await pubSubClient.topic("verify_email").publish(dataBuffer);
 
       delete newUser.dataValues.password;
       res.status(201).send(newUser);
