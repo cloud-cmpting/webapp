@@ -13,12 +13,6 @@ const email_token = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
       unique: true,
-      references: {
-        model: "user_account_info",
-        key: "id",
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-      },
     },
     token: {
       type: DataTypes.STRING,
