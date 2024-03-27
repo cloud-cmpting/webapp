@@ -25,6 +25,7 @@
     "mailgun.js": "^10.2.1",
     "mysql2": "^3.9.1",
     "sequelize": "^6.36.0",
+    "uuid": "^9.0.1",
     "winston": "^3.12.0"
   },
   "devDependencies": {
