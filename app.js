@@ -9,7 +9,7 @@ import { format, transports } from "winston";
 import winston from "winston";
 import jwt from "jsonwebtoken";
 import { PubSub } from "@google-cloud/pubsub";
-import crypto from "crypto";
+import { v4 as uuidv4 } from "uuid";
 
 
 let logFilePath = "";
@@ -161,7 +161,7 @@ app.post(
         email: newUser.dataValues.email,
         first_name: newUser.dataValues.first_name,
         last_name: newUser.dataValues.last_name,
-        token: crypto.randomBytes(64).toString("hex")
+        token: uuidv4()
       };
 
       const dataBuffer = Buffer.from(JSON.stringify(user));
@@ -219,21 +219,35 @@ app.put(
 );
 
 app.get("/verify/:token", async (req, res) => {
-  const token = req.params.token;
-  
-  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
-    if (err) {
-      return res.status(401).json({ message: 'Token invalid or expired' });
+  email_token.findOne({
+    where: {
+      token: req.params.token
+    }
+  })
+  .then((result) => {
+    if (!result) {
+      return res.status(401).json({ message: "Token Invalid" });
+    }
+
+    const tokenCreationTime = new Date(result.dataValues.created_at).getTime();
+    const currentTime = new Date().getTime();
+    if (currentTime - tokenCreationTime > 120000) {
+      return res.status(401).json({ message: "Token expired" });
     }
 
     User.update(
       { is_active: true },
-      { where: { email: user.email } }
+      { where: { id: result.dataValues.user_id } }
     )
+    email_token.destroy({
+      where: {
+        token: req.params.token
+      }
+    })
 
     res.status(200).json({ message: 'User verified successfully' });
   })
-})
+});
 
 // Health APIs
 app.get(
