@@ -7,7 +7,6 @@ import { body, checkExact, validationResult } from "express-validator";
 import expressWinston from "express-winston";
 import { format, transports } from "winston";
 import winston from "winston";
-import jwt from "jsonwebtoken";
 import { PubSub } from "@google-cloud/pubsub";
 import { v4 as uuidv4 } from "uuid";
 
@@ -115,13 +114,18 @@ const authMiddleware = (req, res, next) => {
           password,
           result.dataValues.password
         );
-        if (passwordMatch) {
-          req.user = result.dataValues;
-          next();
-        } else {
+
+        if (!passwordMatch) {
           res.setHeader("WWW-Authenticate", "Basic");
-          res.status(401).send();
+          return res.status(401).send();
         }
+
+        if (process.env.NODE_ENV != "test" && !result.dataValues.is_active) {
+          return res.status(403).send();
+        }
+
+        req.user = result.dataValues;
+        next();
       } else {
         res.status(404).send();
       }
@@ -153,19 +157,21 @@ app.post(
         last_name: req.body.lastName,
       });
 
-      // Pub Sub process
-      const pubSubClient = new PubSub();
+      if (process.env.NODE_ENV !== "test") {
+        // Pub Sub process
+        const pubSubClient = new PubSub();
 
-      const user = {
-        user_id: newUser.dataValues.id,
-        email: newUser.dataValues.email,
-        first_name: newUser.dataValues.first_name,
-        last_name: newUser.dataValues.last_name,
-        token: uuidv4()
-      };
+        const user = {
+          user_id: newUser.dataValues.id,
+          email: newUser.dataValues.email,
+          first_name: newUser.dataValues.first_name,
+          last_name: newUser.dataValues.last_name,
+          token: uuidv4()
+        };
 
-      const dataBuffer = Buffer.from(JSON.stringify(user));
-      const messageId = await pubSubClient.topic("verify_email").publish(dataBuffer);
+        const dataBuffer = Buffer.from(JSON.stringify(user));
+        const messageId = await pubSubClient.topic("verify_email").publish(dataBuffer);
+      }
 
       delete newUser.dataValues.password;
       res.status(201).send(newUser);
@@ -226,7 +232,7 @@ app.get("/verify/:token", async (req, res) => {
   })
   .then((result) => {
     if (!result) {
-      return res.status(401).json({ message: "Token Invalid" });
+      return res.status(404).json({ message: "Token Invalid" });
     }
 
     const tokenCreationTime = new Date(result.dataValues.created_at).getTime();
