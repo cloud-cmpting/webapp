@@ -16,6 +16,19 @@ jobs:
       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
       MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
       MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+      STARTUP_SCRIPT: |
+        #!/bin/bash
+
+        echo "Starting startup script..."
+
+        sudo sh -c  'cat << EOF > /opt/app/.env
+        MYSQL_HOST=10.109.0.2
+        MYSQL_USER=webapp
+        MYSQL_PASSWORD=3?TUr{YFqojzFfLf
+        MYSQL_DATABASE=webapp
+        EOF'
+
+        echo "Startup script executed successfully!"
 
     strategy:
       matrix:
@@ -64,3 +77,14 @@ jobs:
 
     - name: Packer Build
       run: packer build -force -var "credentials_file=$GOOGLE_APPLICATION_CREDENTIALS" -var "project_id=${{ secrets.GCP_PROJECT_ID }}" packer/packer.pkr.hcl
+
+    - name: Create new Instance Template
+      run:
+        gcloud compute instance-templates create packer-instance-template \
+          --machine-type=e2-standard-2 \
+          --instance-template-region=us-east1 \
+          --create-disk="image=packer-img-with-cloud-db,auto-delete=yes,boot=yes,type=pd-ssd,size=40GB,kms-key=projects/cloud--dev/locations/us-east1/keyRings/my-key-ring5/cryptoKeys/vm-disk-key" \
+          --network-interface="network=network1,subnetwork=webapp" \
+          --service-account=vm-service-account@cloud--dev.iam.gserviceaccount.com \
+          --scopes=https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/pubsub \
+          --metadata=startup-script=${{ env.STARTUP_SCRIPT }}
