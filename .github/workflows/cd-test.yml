@@ -57,7 +57,7 @@ jobs:
       run: 'gcloud info'
 
     - name: Setup GCP Service Account Key file
-      run: echo ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }} > GCP_SERVICE_ACCOUNT_KEY.json
+      run: echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > GCP_SERVICE_ACCOUNT_KEY.json
 
     - name: Build application artifact (.zip)
       run: npm run build
