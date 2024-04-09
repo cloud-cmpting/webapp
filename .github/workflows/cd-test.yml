@@ -57,15 +57,16 @@ jobs:
       run: 'gcloud info'
 
     - name: Setup GCP Service Account Key file
-      env:
-        GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-      run: echo $GCP_SERVICE_ACCOUNT_KEY > GCP_SERVICE_ACCOUNT_KEY.json
+      run: echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > GCP_SERVICE_ACCOUNT_KEY.json
 
     - name: Build application artifact (.zip)
       run: npm run build
 
-    # - name: Packer Init
-    #   run: packer init packer/packer.pkr.hcl
+    - name: Packer Init
+      run: packer init packer/packer.pkr.hcl
 
-    # - name: Packer Build
-    #   run: packer build -force -var 'project_id=GCP_PROJECT_ID' -var 'credentials_file=GCP_SERVICE_ACCOUNT_KEY.json' packer/packer.pkr.hcl
+    - name: Packer Build
+      run: packer build -force -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' -var 'credentials_file=GCP_SERVICE_ACCOUNT_KEY.json' packer/packer.pkr.hcl
+
+    - name: Packer Image ID
+      run: echo ${{ steps.packer.outputs.image_id }}
