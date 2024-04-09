@@ -48,15 +48,15 @@ jobs:
     # - name: Build application artifact (.zip)
     #   run: npm run build
 
-    - name: Setup GCP creds
-      env:
-        GCP_SERVICE_ACC_KEY: ${{ secrets.GCP_SERVICE_ACC_KEY }}
-      run: echo $GCP_SERVICE_ACC_KEY | base64 --decode > GCP_SERVICE_ACC_KEY.json
+    # - name: Setup GCP creds
+    #   env:
+    #     GCP_SERVICE_ACC_KEY: ${{ secrets.GCP_SERVICE_ACC_KEY }}
+    #   run: echo $GCP_SERVICE_ACC_KEY | base64 --decode > GCP_SERVICE_ACC_KEY.json
 
     - id: 'auth'
       uses: 'google-github-actions/auth@v2'
       with:
-        credentials_json: GCP_SERVICE_ACC_KEY.json
+        credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v2'
