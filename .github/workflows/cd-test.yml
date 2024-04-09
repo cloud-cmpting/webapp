@@ -62,6 +62,9 @@ jobs:
     - name: Build application artifact (.zip)
       run: npm run build
 
+    - name: Get credentials file path
+      run: echo $GOOGLE_APPLICATION_CREDENTIALS
+
     - name: Packer Init
       run: packer init packer/packer.pkr.hcl
 
