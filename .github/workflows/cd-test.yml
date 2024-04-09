@@ -65,6 +65,9 @@ jobs:
     - name: Packer Init
       run: packer init packer/packer.pkr.hcl
 
+    - name: Packer Validate
+      run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' -var 'credentials_file=GCP_SERVICE_ACCOUNT_KEY.json' packer/packer.pkr.hcl
+
     - name: Packer Build
       run: packer build -force -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' -var 'credentials_file=GCP_SERVICE_ACCOUNT_KEY.json' packer/packer.pkr.hcl
 
