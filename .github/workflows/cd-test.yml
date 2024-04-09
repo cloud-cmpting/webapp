@@ -56,9 +56,6 @@ jobs:
     - name: 'Use gcloud CLI'
       run: 'gcloud info'
 
-    - name: Setup GCP Service Account Key file
-      run: echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > GCP_SERVICE_ACCOUNT_KEY.json
-
     - name: ABC
       run: echo GCP_SERVICE_ACCOUNT_KEY.json
 
@@ -68,11 +65,8 @@ jobs:
     - name: Packer Init
       run: packer init packer/packer.pkr.hcl
 
-    - name: Packer Validate
-      run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' -var 'credentials_file=${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}' packer/packer.pkr.hcl
-
     - name: Packer Build
-      run: packer build -force -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' -var 'credentials_file=${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}' packer/packer.pkr.hcl
+      run: packer build -force -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' -var 'credentials=$GOOGLE_APPLICATION_CREDENTIALS' packer/packer.pkr.hcl
 
     - name: Packer Image ID
       run: echo ${{ steps.packer.outputs.image_id }}
