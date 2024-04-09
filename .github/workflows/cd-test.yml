@@ -12,10 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      NODE_VERSION: ${{ matrix.node-version }}
       MYSQL_USER: ${{ secrets.MYSQL_USER }}
       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
       MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
       MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+      GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
 
     strategy:
       matrix:
@@ -25,47 +28,45 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js NODE_VERSION
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: NODE_VERSION
         cache: 'npm'
 
-    # - name: Setup MySQL
-    #   run: |
-    #     sudo /etc/init.d/mysql start
-    #     mysql -h ${{secrets.MYSQL_HOST}} --port 3306 -u${{secrets.MYSQL_USER}} -p${{secrets.MYSQL_PASSWORD}} -e "CREATE DATABASE ${{ secrets.MYSQL_DATABASE }};"
+    - name: Setup MySQL
+      run: |
+        sudo /etc/init.d/mysql start
+        mysql -h MYSQL_HOST --port 3306 -u MYSQL_USER -p MYSQL_PASSWORD -e "CREATE DATABASE MYSQL_DATABASE;"
 
-    # - name: Install Dependencies
-    #   run: npm ci
+    - name: Install Dependencies
+      run: npm ci
 
-    # - name: Run Integration Tests
-    #   run: npm test
+    - name: Run Integration Tests
+      run: npm test
 
-    # - name: Drop DB
-    #   run: mysql -h ${{secrets.MYSQL_HOST}} --port 3306 -u${{secrets.MYSQL_USER}} -p${{secrets.MYSQL_PASSWORD}} -e "DROP DATABASE ${{ secrets.MYSQL_DATABASE }};"
-    
-    # - name: Build application artifact (.zip)
-    #   run: npm run build
+    - name: Drop DB
+      run: mysql -h MYSQL_HOST --port 3306 -u MYSQL_USER -p MYSQL_PASSWORD -e "DROP DATABASE MYSQL_DATABASE;"
 
-    # - name: Setup GCP creds
-    #   env:
-    #     GCP_SERVICE_ACC_KEY: ${{ secrets.GCP_SERVICE_ACC_KEY }}
-    #   run: echo $GCP_SERVICE_ACC_KEY | base64 --decode > GCP_SERVICE_ACC_KEY.json
-
-    - id: 'auth'
-      uses: 'google-github-actions/auth@v2'
+    - id: auth
+      uses: google-github-actions/auth@v2
       with:
-        credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+        credentials_json: GCP_SERVICE_ACCOUNT_KEY
 
-    - name: 'Set up Cloud SDK'
-      uses: 'google-github-actions/setup-gcloud@v2'
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
 
-    - name: 'Use gcloud CLI'
-      run: 'gcloud info'
+    - name: Use gcloud CLI
+      run: gcloud info
+
+    - name: Setup GCP Service Account Key file
+      run: echo GCP_SERVICE_ACCOUNT_KEY > GCP_SERVICE_ACCOUNT_KEY.json
+
+    - name: Build application artifact (.zip)
+      run: npm run build
 
     # - name: Packer Init
     #   run: packer init packer/packer.pkr.hcl
 
     # - name: Packer Build
-    #   run: packer build -force -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' -var 'credentials_file=GCP_SERVICE_ACC_KEY.json' packer/packer.pkr.hcl
+    #   run: packer build -force -var 'project_id=GCP_PROJECT_ID' -var 'credentials_file=GCP_SERVICE_ACCOUNT_KEY.json' packer/packer.pkr.hcl
