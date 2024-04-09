@@ -1,4 +1,4 @@
-name: cd-test
+name: Packer Build CI
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: cd-test
+    name: Packer Build CI
 
     runs-on: ubuntu-latest
 
@@ -59,14 +59,8 @@ jobs:
     - name: Build application artifact (.zip)
       run: npm run build
 
-    - name: Get credentials file path
-      run: echo $GOOGLE_APPLICATION_CREDENTIALS
-
     - name: Packer Init
       run: packer init packer/packer.pkr.hcl
 
     - name: Packer Build
       run: packer build -force -var "credentials_file=$GOOGLE_APPLICATION_CREDENTIALS" -var "project_id=${{ secrets.GCP_PROJECT_ID }}" packer/packer.pkr.hcl
-
-    - name: Packer Image ID
-      run: echo ${{ steps.packer.outputs.image_id }}
