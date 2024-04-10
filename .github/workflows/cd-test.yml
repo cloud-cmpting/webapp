@@ -92,4 +92,8 @@ jobs:
 
     - name: Update Managed Instance Group
       run: |
-        gcloud compute instance-groups managed set-instance-template instance-group-manager --template=projects/cloud--dev/regions/us-east1/instanceTemplates/instance-template-${{ github.run_id }} --region=us-east1
+        gcloud compute instance-groups managed set-instance-template instance-group-manager --template=projects/${{ secrets.GCP_PROJECT_ID }}/regions/us-east1/instanceTemplates/instance-template-${{ github.run_id }} --region=us-east1
+
+    - name: Start a Basic Rolling Update
+      run: |
+        gcloud compute instance-groups managed rolling-action start-update instance-group-manager --version=template=projects/${{ secrets.GCP_PROJECT_ID }}/regions/us-east1/instanceTemplates/instance-template-${{ github.run_id }} --region=us-east1
