@@ -66,4 +66,13 @@ jobs:
     #   run: packer build -force -var "credentials_file=$GOOGLE_APPLICATION_CREDENTIALS" -var "project_id=${{ secrets.GCP_PROJECT_ID }}" packer/packer.pkr.hcl
 
     - name: Create new Instance Template
-      run: gcloud compute instance-templates create instance-template-$(date +'%m-%d-%Y-%H-%M-%S') --machine-type=e2-standard-2 --instance-template-region=us-east1 --region=us-east1 --create-disk="image=packer-img-with-cloud-db,auto-delete=yes,boot=yes,type=pd-ssd,size=40GB,kms-key=projects/cloud--dev/locations/us-east1/keyRings/my-key-ring5/cryptoKeys/vm-disk-key" --network-interface="network=network1,subnet=webapp" --service-account=vm-service-account@cloud--dev.iam.gserviceaccount.com --scopes=https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/pubsub --metadata=startup-script-url=gs://cloud--dev-startup-script/startup.sh
+      run: |
+        gcloud compute instance-templates create instance-template-$(date +'%m-%d-%Y-%H-%M-%S') \
+            --machine-type=e2-standard-2 \
+            --instance-template-region=us-east1 \
+            --region=us-east1 \
+            --create-disk="image=packer-img-with-cloud-db,auto-delete=yes,boot=yes,type=pd-ssd,size=40GB,kms-key=projects/cloud--dev/locations/us-east1/keyRings/my-key-ring5/cryptoKeys/vm-disk-key" \
+            --network-interface="network=network1,subnet=webapp" \
+            --service-account=vm-service-account@cloud--dev.iam.gserviceaccount.com \
+            --scopes=https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/pubsub \
+            --metadata=startup-script-url=gs://cloud--dev-startup-script/startup.sh
