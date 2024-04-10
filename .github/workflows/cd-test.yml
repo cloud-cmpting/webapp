@@ -69,6 +69,8 @@ jobs:
       run: |
         MYSQL_HOST_SECRET=${gcloud secrets versions access latest --secret="mysql-host-secret"}
         MYSQL_PASSWORD_SECRET=${gcloud secrets versions access latest --secret="mysql-password-secret"}
+        echo $MYSQL_HOST_SECRET
+        echo $MYSQL_PASSWORD_SECRET
 
         gcloud compute instance-templates create instance-template-$(date +'%m-%d-%Y-%H-%M-%S') \
             --machine-type=e2-standard-2 \
