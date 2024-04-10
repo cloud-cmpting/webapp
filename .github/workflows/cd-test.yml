@@ -68,8 +68,9 @@ jobs:
         MYSQL_HOST_GCP=$(gcloud secrets versions access latest --secret="mysql-host-secret")
         MYSQL_PASSWORD_GCP=$(gcloud secrets versions access latest --secret="mysql-password-secret")
         VM_DISK_KEY_GCP=$(gcloud secrets versions access latest --secret="vm-disk-key-secret")
+        TEMPLATE_NAME=instance-template-$(date +'%m-%d-%Y-%H-%M-%S')
 
-        gcloud compute instance-templates create instance-template-$(date +'%m-%d-%Y-%H-%M-%S') \
+        gcloud compute instance-templates create $TEMPLATE_NAME \
             --machine-type=e2-standard-2 \
             --instance-template-region=us-east1 \
             --region=us-east1 \
@@ -89,3 +90,9 @@ jobs:
         EOF\"
 
         echo \"Startup script executed successfully!\""
+
+    - name: Update Managed Instance Group
+      run: |
+        gcloud compute instance-groups managed update instance-group-manager \
+            --region=us-east1 \
+            --template=$TEMPLATE_NAME
