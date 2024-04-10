@@ -94,5 +94,5 @@ jobs:
     - name: Update Managed Instance Group
       run: |
         gcloud compute instance-groups managed set-instance-template instance-group-manager \
-            --template=$TEMPLATE_NAME \    
+            --template=projects/cloud--dev/regions/us-east1/instanceTemplates/$TEMPLATE_NAME \
             --region=us-east1
