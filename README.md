@@ -5,5 +5,5 @@ Repository for all the assignments of the course: CSYE 6225 - Network Structures
 - Run `brew services restart mysql`
 - create database `webapp`
 - Add `.env` file in the folder
-- Run `npm install` 
+- Run `npm install`
 - Run `node app.js`  
