@@ -84,11 +84,11 @@ jobs:
 
         echo "Starting startup script..."
 
-        sudo sh -c '"'"'cat << EOF > /opt/app/.env
-        MYSQL_HOST=$MYSQL_HOST_GCP
+        sudo sh -c 'cat << EOF > /opt/app/.env
+        MYSQL_HOST='"$MYSQL_HOST_GCP"'
         MYSQL_USER=webapp
-        MYSQL_PASSWORD=$MYSQL_PASSWORD_GCP
+        MYSQL_PASSWORD='"$MYSQL_PASSWORD_GCP"'
         MYSQL_DATABASE=webapp
-        EOF'"'"'
+        EOF'
 
         echo "Startup script executed successfully!"'
