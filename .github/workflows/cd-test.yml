@@ -75,7 +75,8 @@ jobs:
             --machine-type=e2-standard-2 \
             --instance-template-region=us-east1 \
             --region=us-east1 \
-            --create-disk='image=packer-img-with-cloud-db,auto-delete=yes,boot=yes,type=pd-ssd,size=40GB,kms-key=$VM_DISK_KEY_GCP' \
+            --create-disk="image=packer-img-with-cloud-db,auto-delete=yes,boot=yes,type=pd-ssd,size=40GB" \
+            --boot-disk-kms-key=$VM_DISK_KEY_GCP \
             --network-interface="network=network1,subnet=webapp" \
             --service-account=vm-service-account@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com \
             --scopes=https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/pubsub \
