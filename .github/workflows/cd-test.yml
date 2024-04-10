@@ -79,9 +79,9 @@ jobs:
             --metadata=startup-script='#!/bin/bash
         echo "Starting startup script..."
         sudo sh -c  '\''cat << EOF > /opt/app/.env
-        MYSQL_HOST=$MYSQL_HOST_SECRET
+        MYSQL_HOST='"$MYSQL_HOST_SECRET"'
         MYSQL_USER=${google_sql_user.user.name}
-        MYSQL_PASSWORD=$MYSQL_PASSWORD_SECRET
+        MYSQL_PASSWORD='"$MYSQL_PASSWORD_SECRET"'
         MYSQL_DATABASE=${google_sql_database.database.name}
         EOF'\''
         echo "Startup script executed successfully!"'
