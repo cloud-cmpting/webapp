@@ -63,25 +63,31 @@ jobs:
     # - name: Packer Build
     #   run: packer build -force -var "credentials_file=$GOOGLE_APPLICATION_CREDENTIALS" -var "project_id=${{ secrets.GCP_PROJECT_ID }}" packer/packer.pkr.hcl
 
+    - name: Get GCP Secrets
+      run: |
+        MYSQL_HOST_GCP=$(gcloud secrets versions access latest --secret="mysql-host-secret")
+        MYSQL_PASSWORD_GCP=$(gcloud secrets versions access latest --secret="mysql-password-secret")
+        VM_DISK_KEY_GCP=$(gcloud secrets versions access latest --secret="vm-disk-key-secret")
+
     - name: Create new Instance Template
       run: |
-        MYSQL_HOST_SECRET=$(gcloud secrets versions access latest --secret="mysql-host-secret")
-        MYSQL_PASSWORD_SECRET=$(gcloud secrets versions access latest --secret="mysql-password-secret")
-
         gcloud compute instance-templates create instance-template-$(date +'%m-%d-%Y-%H-%M-%S') \
             --machine-type=e2-standard-2 \
             --instance-template-region=us-east1 \
             --region=us-east1 \
-            --create-disk="image=packer-img-with-cloud-db,auto-delete=yes,boot=yes,type=pd-ssd,size=40GB,kms-key=projects/cloud--dev/locations/us-east1/keyRings/my-key-ring5/cryptoKeys/vm-disk-key" \
+            --create-disk='image=packer-img-with-cloud-db,auto-delete=yes,boot=yes,type=pd-ssd,size=40GB,kms-key='$VM_DISK_KEY_GCP'' \
             --network-interface="network=network1,subnet=webapp" \
-            --service-account=vm-service-account@cloud--dev.iam.gserviceaccount.com \
+            --service-account=vm-service-account@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com \
             --scopes=https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/pubsub \
             --metadata=startup-script='#!/bin/bash
+
         echo "Starting startup script..."
+
         sudo sh -c  '\''cat << EOF > /opt/app/.env
-        MYSQL_HOST='"$MYSQL_HOST_SECRET"'
-        MYSQL_USER=${google_sql_user.user.name}
-        MYSQL_PASSWORD='"$MYSQL_PASSWORD_SECRET"'
-        MYSQL_DATABASE=${google_sql_database.database.name}
+        MYSQL_HOST='"$MYSQL_HOST_GCP"'
+        MYSQL_USER=webapp
+        MYSQL_PASSWORD='"$MYSQL_PASSWORD_GCP"'
+        MYSQL_DATABASE=webapp
         EOF'\''
+
         echo "Startup script executed successfully!"'
