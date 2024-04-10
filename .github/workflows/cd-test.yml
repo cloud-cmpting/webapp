@@ -68,9 +68,8 @@ jobs:
         MYSQL_HOST_GCP=$(gcloud secrets versions access latest --secret="mysql-host-secret")
         MYSQL_PASSWORD_GCP=$(gcloud secrets versions access latest --secret="mysql-password-secret")
         VM_DISK_KEY_GCP=$(gcloud secrets versions access latest --secret="vm-disk-key-secret")
-        TEMPLATE_NAME=instance-template-$(date +'%m-%d-%Y-%H-%M-%S')
 
-        gcloud compute instance-templates create $TEMPLATE_NAME \
+        gcloud compute instance-templates create instance-template-${{ github.run_id }} \
             --machine-type=e2-standard-2 \
             --instance-template-region=us-east1 \
             --region=us-east1 \
@@ -93,4 +92,4 @@ jobs:
 
     - name: Update Managed Instance Group
       run: |
-        gcloud compute instance-groups managed set-instance-template instance-group-manager --template=projects/cloud--dev/regions/us-east1/instanceTemplates/$TEMPLATE_NAME --region=us-east1
+        gcloud compute instance-groups managed set-instance-template instance-group-manager --template=projects/cloud--dev/regions/us-east1/instanceTemplates/instance-template-${{ github.run_id }} --region=us-east1
