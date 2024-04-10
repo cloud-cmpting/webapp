@@ -73,7 +73,7 @@ jobs:
             --machine-type=e2-standard-2 \
             --instance-template-region=us-east1 \
             --region=us-east1 \
-            --create-disk="image=packer-img-with-cloud-db,auto-delete=yes,boot=yes,type=pd-ssd,size=40GB,kms-key=$VM_DISK_KEY_GCP" \
+            --create-disk="image=packer-img-with-cloud-db,auto-delete=yes,boot=yes,type=pd-ssd,size=40GB,kms-key=$(gcloud secrets versions access latest --secret="vm-disk-key-secret")" \
             --network-interface="network=network1,subnet=webapp" \
             --service-account=vm-service-account@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com \
             --scopes=https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/pubsub \
@@ -82,9 +82,9 @@ jobs:
         echo "Starting startup script..."
 
         sudo sh -c  "cat << EOF > /opt/app/.env
-        MYSQL_HOST=$MYSQL_HOST_GCP
+        MYSQL_HOST=$(gcloud secrets versions access latest --secret="mysql-host-secret")
         MYSQL_USER=webapp
-        MYSQL_PASSWORD=$MYSQL_PASSWORD_GCP
+        MYSQL_PASSWORD=$(gcloud secrets versions access latest --secret="mysql-password-secret")
         MYSQL_DATABASE=webapp
         EOF"
 
