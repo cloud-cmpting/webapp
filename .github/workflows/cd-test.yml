@@ -100,4 +100,4 @@ jobs:
 
     - name: Monitor Rolling Update
       run: |
-        gcloud compute instance-groups managed wait-until instance-group-manager --version-target-reached --region=us-east1
+        gcloud compute instance-groups managed wait-until instance-group-manager --stable --region=us-east1
