@@ -137,7 +137,7 @@ const authMiddleware = (req, res, next) => {
 
 // Create User API
 app.post(
-  "/v1/user",
+  "/v2/user",
   [
     body("email").notEmpty().withMessage("email is required").bail().isEmail(),
     body("password").notEmpty().withMessage("password is required"),
@@ -183,7 +183,7 @@ app.post(
 
 // Get User API
 app.get(
-  "/v1/user/self",
+  "/v2/user/self",
   [checkExact()],
   validateRequest,
   authMiddleware,
@@ -195,7 +195,7 @@ app.get(
 
 // Update User API
 app.put(
-  "/v1/user/self",
+  "/v2/user/self",
   [
     body("password").notEmpty().withMessage("password is required"),
     body("firstName").notEmpty().withMessage("firstName is required"),
